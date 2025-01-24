@@ -12,15 +12,6 @@ def preprocess_text(text):
     text = text.lower()
     return text
 
-# Function to extract name from CV content
-def extract_name(cv_text):
-    # Extract name from the first few lines (adjust logic as needed)
-    lines = cv_text.splitlines()
-    for line in lines[:3]:  # Only check the first 3 lines
-        if len(line.split()) >= 2:  # Assume names have at least 2 words
-            return line.strip()
-    return "Unknown Name"
-
 # Function to read the uploaded file
 def read_file(file):
     try:
@@ -57,7 +48,6 @@ def main():
     if uploaded_files:
         # Preprocess and read all uploaded CVs
         cvs = [preprocess_text(read_file(file)) for file in uploaded_files]
-        names = [extract_name(read_file(file)) for file in uploaded_files]  # Extract candidate names
 
         # Text area to input job description
         job_description = st.text_area("Enter Job Description")
@@ -69,11 +59,11 @@ def main():
 
             # Rank candidates based on similarity
             ranked_indices = rank_candidates(cv_embeddings, job_embedding)
-
-            # Display ranked candidates
             st.write("Top 10 Candidates:")
-            for rank, idx in enumerate(ranked_indices, 1):
-                st.write(f"Candidate {rank}: {names[idx]}")  # Correctly map index to name
+
+            for idx in ranked_indices:
+                st.write(f"Candidate {idx + 1}:")
+                st.write(cvs[idx])
 
 # Entry point
 if __name__ == "__main__":
