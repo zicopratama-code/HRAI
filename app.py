@@ -14,12 +14,10 @@ def preprocess_text(text):
 
 # Function to extract name from CV content
 def extract_name(cv_text):
-    # Simple logic to extract name (assumes the first word is a name placeholder)
-    # Adjust this logic based on the CV structure
-    lines = cv_text.split('\n')
-    for line in lines:
-        # Search for a line that looks like a name
-        if len(line.split()) <= 3:  # Assuming names have up to 3 words
+    # Extract name from the first few lines (adjust logic as needed)
+    lines = cv_text.splitlines()
+    for line in lines[:3]:  # Only check the first 3 lines
+        if len(line.split()) >= 2:  # Assume names have at least 2 words
             return line.strip()
     return "Unknown Name"
 
@@ -71,10 +69,11 @@ def main():
 
             # Rank candidates based on similarity
             ranked_indices = rank_candidates(cv_embeddings, job_embedding)
-            st.write("Top 10 Candidates:")
 
+            # Display ranked candidates
+            st.write("Top 10 Candidates:")
             for rank, idx in enumerate(ranked_indices, 1):
-                st.write(f"Candidate {rank}: {names[idx]}")
+                st.write(f"Candidate {rank}: {names[idx]}")  # Correctly map index to name
 
 # Entry point
 if __name__ == "__main__":
